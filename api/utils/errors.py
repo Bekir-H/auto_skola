@@ -25,7 +25,7 @@ INVALID_CREDENTIALS = "invalidCredentials"
 TOKEN_EXPIRED = "tokenExpired"
 USER_IS_ALREADY_ADMIN = "userAlreadyAnAdmin"
 USER_IS_NOT_ADMIN = "userIsNotAnAdmin"
-
+NO_PERMISSION = 'noPermission'
 
 ERRORS: Dict[str, Error] = {
     VERIFICATION_TOKEN_INVALID: Error(VERIFICATION_TOKEN_INVALID, "Verification token does not exists", status.HTTP_400_BAD_REQUEST),
@@ -38,4 +38,5 @@ ERRORS: Dict[str, Error] = {
     TOKEN_EXPIRED: Error(TOKEN_EXPIRED, "This token is expired.", status.HTTP_400_BAD_REQUEST),
     USER_IS_ALREADY_ADMIN: Error(USER_IS_ALREADY_ADMIN, "User is already an admin", status.HTTP_400_BAD_REQUEST),
     USER_IS_NOT_ADMIN: Error(USER_IS_NOT_ADMIN, "User is not an admin", status.HTTP_400_BAD_REQUEST),
+    NO_PERMISSION: Error(NO_PERMISSION, "No permission", status.HTTP_403_FORBIDDEN)
 }

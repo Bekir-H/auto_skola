@@ -6,19 +6,21 @@ from rest_framework.response import Response
 from api.admin.serializers.update_user import UpdateSerializer
 from api.models.user import PlatformUser
 from api.serializers.user import UserSerializer
+from api.utils.error_handler import WrapperException
+from api.utils.errors import NO_PERMISSION
 
 
 class UpdateUserView(GenericAPIView):
     serializer_class = UpdateSerializer
     permission_classes = [IsAuthenticated]
 
-    def post(self, request):
+    def post(self, request, pk):
+        if not request.user.is_staff:
+            raise WrapperException(NO_PERMISSION)
         serializer = UpdateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        user = PlatformUser.objects.update_user(
+        PlatformUser.objects.filter(id=pk).update(
             **serializer.validated_data,
-            username=serializer.validated_data.get("email")
         )
-
-        return Response(data=UserSerializer(user).data, status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_204_NO_CONTENT)

@@ -1,11 +1,10 @@
 from django.urls import re_path as url
 
-from api.admin.views.registration import CreateUserView
-from api.admin.views.update_user import UpdateUserView
+from api.admin.urls import admin_urlpatterns
 from api.views.registration import ActivateAccountView
 from api.views.health import HealthCheckView
 from api.views.auth import AuthenticationView
-
+from api.views.user import UserView
 
 urlpatterns = [
     # Auth
@@ -14,8 +13,6 @@ urlpatterns = [
 
     url(r"^health/?$", HealthCheckView.as_view(), name='health_check'),
 
-    # Admin Endpoints
-    url(r"^admin/registration/?$", CreateUserView.as_view(), name="admin_account_create"),
-    url(r"^admin/user/(?P<pk>[0-9]+)/?$", UpdateUserView.as_view(), name="admin_update_user"),
-
-]
+    # User
+    url(r"^current/?$", UserView.as_view(), name="current_user")
+] + admin_urlpatterns
