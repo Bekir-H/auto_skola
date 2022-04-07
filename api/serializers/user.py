@@ -11,6 +11,7 @@ class UserSerializer(serializers.ModelSerializer):
             'last_name',
             'email',
             'username',
+            'verification_token'
         ]
 
         #x-csrftoken

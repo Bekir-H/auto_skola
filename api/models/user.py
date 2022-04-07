@@ -20,7 +20,8 @@ class UserManager(auth_models.BaseUserManager):
         create_fields = {
             "is_staff": False,
             "is_superuser": False,
-            "date_registered": now
+            "is_active": False,
+            "verification_token": uuid.uuid4().hex
         }
 
         email = fields.pop("email", None)
@@ -30,24 +31,19 @@ class UserManager(auth_models.BaseUserManager):
         if len(email) == 0:
             email = None
 
+        create_fields["email"] = email
         for elem in fields:
             create_fields[elem] = fields[elem]
-
-        if password:
-            create_fields["is_active"] = False
-            create_fields["verification_token"] = uuid.uuid4().hex
-
-        create_fields["email"] = email
 
         user = self.model(**create_fields)
         if password:
             user.set_password(password)
 
         user.save()
-
         return user
-
     ###########################################################################
+    ###########################################################################
+
     def create_superuser(self, **extra_fields):
         superuser = self.create_user(**extra_fields)
         superuser.is_staff = True
@@ -103,6 +99,7 @@ class UserManager(auth_models.BaseUserManager):
 class PlatformUser(auth_models.User):
     is_login_blocked = models.BooleanField(default=False)
     is_disabled = models.BooleanField(default=False)
+    verification_token = models.CharField(max_length=32, null=True, blank=True)
 
     USERNAME_FIELD = "email"
     objects = UserManager()

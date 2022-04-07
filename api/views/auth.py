@@ -28,20 +28,23 @@ from api.serializers.auth import AuthSerializer
 
 class AuthenticationView(GenericAPIView):
     serializer_class = AuthSerializer
+    permission_classes = []
 
     def post(self, request):
         logout(request)
+
         serializer = AuthSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = authenticate(request, username=serializer.validated_data.get("email"), **serializer.validated_data)
+        print(user)
         if not user:
             user_with_email = PlatformUser.objects.filter(email=serializer.validated_data.get("email")).first()
             if user_with_email:
                 if user_with_email.is_login_blocked:
                     raise WrapperException(LOGIN_IS_BLOCKED)
 
-            if user.is_disabled:
-                raise WrapperException(ACCOUNT_DISABLED)
+                if user_with_email.is_disabled:
+                    raise WrapperException(ACCOUNT_DISABLED)
             raise WrapperException(INVALID_CREDENTIALS)
 
         user = PlatformUser.objects.filter(id=user.id).first()

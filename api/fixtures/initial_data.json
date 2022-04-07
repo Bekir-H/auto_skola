@@ -18,7 +18,8 @@
    {
     "model": "api.PlatformUser",
     "fields": {
-      "user_ptr_id": 1
+      "user_ptr_id": 1,
+       "verification_token": null
     }
   }
 ]

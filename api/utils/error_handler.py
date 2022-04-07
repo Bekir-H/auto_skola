@@ -127,7 +127,7 @@ def custom_exception_handler(exc: Exception, context):
         return error_response
 
     return Response(ErrorSerializer(Error(camelCase(type(exc).__name__), str(exc))).data, status_code,
-                    headers={v[0]: v[1] for k, v in (response._headers.items() if response else {})})
+                    headers={v[0]: v[1] for k, v in (response._headers.items() if response and hasattr(response, '_headers') else {})})
 
 
 def __get_error_from_code(error_code, status_code, error_message):
